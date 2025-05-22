@@ -35,4 +35,4 @@
 -keep class android.content.pm.PackageInfo { *; }
 
 # 保留 MainActivity
--keep class com.example.yi.MainActivity { *; }
+-keep class com.example.timecoins.MainActivity { *; }
