@@ -27,6 +27,15 @@ android {
         }
     }
 
+    // 打包改名
+    applicationVariants.all {
+        outputs.all {
+            val ver = defaultConfig.versionName
+            (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl).outputFileName =
+                "timecoins-${buildType.name}-$ver.apk";
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -34,11 +43,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            applicationVariants.all {
-                outputs.all {
-                    outputFileName = "TimeCoins-\${versionName}-\${versionCode}.apk"
-                }
-            }
         }
     }
     compileOptions {
@@ -73,3 +77,4 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
+
