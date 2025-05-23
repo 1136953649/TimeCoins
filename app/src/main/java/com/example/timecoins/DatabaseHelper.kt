@@ -3,6 +3,7 @@ package com.example.timecoins
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.io.File
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
@@ -66,5 +67,81 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         cursor.close()
         db.close()
         return colors
+    }
+    
+    fun exportDatabase(context: Context): Boolean {
+        val dbFile = context.getDatabasePath(DATABASE_NAME)
+        if (!dbFile.exists()) return false
+        
+        val backupDir = context.getExternalFilesDir("backups")
+        backupDir?.mkdirs()
+        val backupFile = File(backupDir, "TimeCoins_backup.db")
+        
+        try {
+            dbFile.copyTo(backupFile, overwrite = true)
+            return true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
+        }
+    }
+    
+    fun getDatabaseModifiedTime(context: Context): Long {
+        val dbFile = context.getDatabasePath(DATABASE_NAME)
+        return if (dbFile.exists()) dbFile.lastModified() else 0L
+    }
+    
+    fun getBackupModifiedTime(context: Context): Long {
+        val backupDir = context.getExternalFilesDir("backups")
+        val backupFile = File(backupDir, "TimeCoins_backup.db")
+        return if (backupFile.exists()) backupFile.lastModified() else 0L
+    }
+    
+    fun importDatabase(context: Context): Boolean {
+        val backupDir = context.getExternalFilesDir("backups")
+        val backupFile = File(backupDir, "TimeCoins_backup.db")
+        if (!backupFile.exists()) return false
+        
+        val dbFile = context.getDatabasePath(DATABASE_NAME)
+        
+        // 如果数据库文件不存在或者数据库为空，则直接恢复
+        if (!dbFile.exists() || isDatabaseEmpty(context)) {
+            try {
+                backupFile.copyTo(dbFile, overwrite = true)
+                return true
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return false
+            }
+        }
+        
+        // 比较时间戳，只有当备份文件比当前数据库新时才恢复
+        if (backupFile.lastModified() <= dbFile.lastModified()) {
+            return false
+        }
+        
+        try {
+            backupFile.copyTo(dbFile, overwrite = true)
+            return true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
+        }
+    }
+    
+    private fun isDatabaseEmpty(context: Context): Boolean {
+        val dbFile = context.getDatabasePath(DATABASE_NAME)
+        if (!dbFile.exists()) return true
+        
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT COUNT(*) FROM $TABLE_CELLS", null)
+        return if (cursor.moveToFirst()) {
+            cursor.getInt(0) == 0
+        } else {
+            true
+        }.also {
+            cursor.close()
+            db.close()
+        }
     }
 }

@@ -6,16 +6,12 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import android.widget.GridLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarLayout
 import com.haibin.calendarview.CalendarView
-import android.database.sqlite.SQLiteDatabase
-import android.graphics.Paint
+
 
 
 class MainActivity : AppCompatActivity() ,View.OnClickListener,CalendarView.OnCalendarSelectListener,CalendarView.OnYearChangeListener,CalendarView.OnViewChangeListener,CalendarView.OnCalendarRangeSelectListener{
@@ -31,17 +27,25 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener,CalendarView.OnCa
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initWindow();
         setContentView(getLayoutId());
+        initWindow();
         
         dbHelper = DatabaseHelper(this)
         mCalendarView = findViewById(R.id.calendarView)
         mCalendarView.setOnCalendarSelectListener(this)
         mCalendarView.setOnViewChangeListener(this)
-        
+
+        // 检查并恢复备份数据
+        dbHelper.importDatabase(this)
+   
         // 初始化当前日期的格子数据
         val date = "" + mCalendarView.selectedCalendar.year + "-" + mCalendarView.selectedCalendar.month + "-" + mCalendarView.selectedCalendar.day;
         updateGridColors(date)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        dbHelper.exportDatabase(this)
     }
 
     fun show(context: Context) {
