@@ -34,6 +34,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            applicationVariants.all {
+                outputs.all {
+                    outputFileName = "TimeCoins-\${versionName}-\${versionCode}.apk"
+                }
+            }
         }
     }
     compileOptions {
