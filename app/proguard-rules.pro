@@ -21,8 +21,8 @@
 #-renamesourcefileattribute SourceFile
 
 # 保留你的应用程序包名
--keep class com.example.yi.** { *; }
--keepclassmembers class com.example.yi.** { *; }
+-keep class com.example.timecoins.** { *; }
+-keepclassmembers class com.example.timecoins.** { *; }
 
 # 保留 AndroidX 库
 -keep class androidx.** { *; }
