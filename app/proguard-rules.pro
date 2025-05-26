@@ -34,5 +34,7 @@
 -keep class android.content.Context { *; }
 -keep class android.content.pm.PackageInfo { *; }
 
+-keep class com.haibin.calendarview.** { *; }
+
 # 保留 MainActivity
 -keep class com.example.timecoins.MainActivity { *; }
