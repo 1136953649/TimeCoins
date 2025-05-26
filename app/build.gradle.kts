@@ -36,14 +36,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            // 打包改名
-            applicationVariants.all {
-                outputs.all {
-                    val ver = defaultConfig.versionName
-                    (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl).outputFileName =
-                        "timecoins-${buildType.name}-$ver.apk";
-                }
-            }
         }
     }
     compileOptions {
