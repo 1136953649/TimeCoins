@@ -42,7 +42,7 @@ class TimeCoinsMonthView(context: Context) : RangeMonthView(context) {
         val colorsMap = dbHelper.getAllCellColorsByDate(date)
 
         for (i in 1 .. colorsCount) {
-            mSelectedPaint.setColor(TimeCoinsWeekView.generateColor(i,colorsMap)); // 生成颜色
+            mSelectedPaint.setColor(MainActivity.generateColor(i,colorsMap)); // 生成颜色
 
             canvas.drawArc(x + lineWidth, y + lineWidth, (x + mItemWidth) - lineWidth, (y + mItemHeight) - lineWidth, startAngle, sweepAngle, false, mSelectedPaint);
             startAngle += sweepAngle; // 更新开始角度

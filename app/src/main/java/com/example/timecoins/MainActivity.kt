@@ -19,8 +19,27 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener,CalendarView.OnCa
     private lateinit var mCalendarLayout: CalendarLayout;
     private lateinit var dbHelper: DatabaseHelper
 
-    val labels = arrayOf("高效娱乐", "休息时间", "被动工作", "高效工作", "无效拖延")
-    val colors = arrayOf("#10ebeb", "#1ae61a", "#ff7700", "#ffd900", "#FF0000")
+    
+
+    companion object {
+
+        val labels = arrayOf("高效娱乐，运动，学习", "休息放松", "被动工作", "高效工作", "无效拖延")
+        val colors = arrayOf("#10ebeb", "#1ae61a", "#ff7700", "#ffd900", "#FF0000")
+
+        fun generateColor(index : Int, colorsMap: Map<Int,Int> ) : Int {
+            if (index == 0){
+                return Color.WHITE
+            }else if (index == 35){
+                return Color.BLACK
+            }else {
+                return colorsMap[index]?.let {
+                    Color.parseColor(colors[it])
+                } ?: run {
+                    Color.WHITE
+                }
+            }
+        }
+    }
 
     protected fun initWindow() {
     }

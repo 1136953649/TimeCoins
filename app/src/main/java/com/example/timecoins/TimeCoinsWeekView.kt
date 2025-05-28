@@ -2,34 +2,12 @@ package com.example.timecoins
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
-import com.haibin.calendarview.BaseView
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.WeekView
 
 
 class TimeCoinsWeekView(context: Context) : WeekView(context) {
-
-    companion object {
-
-        val colors = arrayOf("#10ebeb", "#1ae61a", "#ff7700", "#ffd900", "#FF0000")
-
-        fun generateColor(index : Int, colorsMap: Map<Int,Int> ) : Int {
-            if (index == 0){
-                return Color.WHITE
-            }else if (index == 35){
-                return Color.BLACK
-            }else {
-                return colorsMap[index]?.let {
-                    Color.parseColor(colors[it])
-                } ?: run {
-                    Color.WHITE
-                }
-            }
-        }
-    }
-
 
     private lateinit var dbHelper: DatabaseHelper
 
@@ -60,7 +38,7 @@ class TimeCoinsWeekView(context: Context) : WeekView(context) {
         val date = "" + calendar.year + "-" + calendar.month + "-" +calendar.day;
         val colorsMap = dbHelper.getAllCellColorsByDate(date)
         for (i in 1 .. colorsCount) {
-            mSelectedPaint.setColor(generateColor(i,colorsMap)); // 生成颜色
+            mSelectedPaint.setColor(MainActivity.generateColor(i,colorsMap)); // 生成颜色
 
             canvas.drawArc(x + lineWidth, lineWidth, (x + mItemWidth) - lineWidth, mItemHeight - lineWidth, startAngle, sweepAngle, false, mSelectedPaint);
             startAngle += sweepAngle; // 更新开始角度
@@ -89,7 +67,7 @@ class TimeCoinsWeekView(context: Context) : WeekView(context) {
         val colorsMap = dbHelper.getAllCellColorsByDate(date)
 
         for (i in 1 .. colorsCount) {
-            mSchemePaint.setColor(generateColor(i,colorsMap)); // 生成颜色
+            mSchemePaint.setColor(MainActivity.generateColor(i,colorsMap)); // 生成颜色
             canvas.drawArc(x - 10f, x + 10f, -10f, 10f, startAngle, sweepAngle, false, mSchemePaint);
             startAngle += sweepAngle; // 更新开始角度
         }
